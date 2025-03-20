@@ -1,35 +1,27 @@
-    const blobId = "1352424549853093888";
-    const apiUrl = `https://jsonblob.com/api/jsonBlob/${blobId}`;
+async function updateViewCounter() {
+  try {
+    let response = await fetch(apiUrl);
+    if (!response.ok) throw new Error("Failed to fetch view count");
+    let data = await response.json();
 
+    // Convert to number
+    let currentCount = Number(data.views) || 0;
+    currentCount += 1;
 
-    async function updateViewCounter() {
-      try {
+    await fetch(apiUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+      body: JSON.stringify({ views: currentCount }),
+    });
 
-        let response = await fetch(apiUrl);
-        if (!response.ok) throw new Error("Failed to fetch view count");
-        let data = await response.json();
+    document.getElementById("view-count").textContent = currentCount;
+  } catch (error) {
+    console.error("Error updating view counter:", error);
+    document.getElementById("view-count").textContent = "Error!";
+  }
+}
 
-
-        let currentCount = data.views || 0;
-        currentCount += 1;
-
-
-        await fetch(apiUrl, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-          },
-          body: JSON.stringify({ views: currentCount }),
-        });
-
-
-        document.getElementById("view-count").textContent = currentCount;
-      } catch (error) {
-        console.error("Error updating view counter:", error);
-        document.getElementById("view-count").textContent = "Error!";
-      }
-    }
-
-
-    updateViewCounter();
+updateViewCounter();
