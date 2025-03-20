@@ -10,7 +10,7 @@
         let data = await response.json();
 
 
-        let currentCount = data.views || 0;
+        let currentCount = Number(data.views) || 0;
         currentCount += 1;
 
 
